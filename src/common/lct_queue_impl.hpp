@@ -10,9 +10,12 @@ lct_queue_t<T>::~lct_queue_t(){
 
 template <typename T>
 lct_error_code_t lct_queue_t<T>::enqueue(const object_type& obj){
-	std::unique_lock<lct_mutex_t> guard(m_mutex);
-	const bool is_empty = m_lct_queue_data.empty();
-	m_lct_queue_data.push(obj);
+	bool is_empty = false;
+	{
+		std::unique_lock<lct_mutex_t> guard(m_mutex);
+		is_empty = m_lct_queue_data.empty();
+		m_lct_queue_data.push(obj);
+	}
 	if(is_empty){
 		m_cond_var.notify_one();
 	}
@@ -21,9 +24,12 @@ lct_error_code_t lct_queue_t<T>::enqueue(const object_type& obj){
 
 template <typename T>
 lct_error_code_t lct_queue_t<T>::enqueue(object_type&& obj){
-	std::unique_lock<lct_mutex_t> guard(m_mutex);
-	const bool is_empty = m_lct_queue_data.empty();
-	m_lct_queue_data.push(obj);
+	bool is_empty = false;
+	{
+		std::unique_lock<lct_mutex_t> guard(m_mutex);
+		is_empty = m_lct_queue_data.empty();
+		m_lct_queue_data.push(obj);
+	}
 	if(is_empty){
 		m_cond_var.notify_all();
 	}
