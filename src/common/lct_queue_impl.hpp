@@ -17,7 +17,7 @@ lct_error_code_t lct_queue_t<T>::enqueue(const object_type& obj){
 		m_lct_queue_data.push(obj);
 	}
 	if(is_empty){
-		m_cond_var.notify_one();
+		m_cond_var.notify_all();
 	}
 	return lct_error_code_t::lct_error_code_successful;
 }
